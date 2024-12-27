@@ -3,9 +3,9 @@
 
 using namespace std;
 
-void field_element::read_element(string& in){
+void galois_field_element::read_element(string in){
     element.reset();
-    int len = in.length();
+    size_t len = in.length();
     if(len > element.size()){
         throw invalid_argument("Input is too long");
     }
@@ -16,9 +16,20 @@ void field_element::read_element(string& in){
     }
 }
 
-void field_element::print_element(){
-    for(int i = element.size()-1; i >=0; i--){
-        cout << element[i];
-    }
-    cout << "\n";
+void galois_field_element::print_element(){
+    cout << element << "\n";
+    // for(size_t i = element.size()-1; i >=0; i--){
+    //     cout << element[i];
+    // }
+    // cout << "\n";
+}
+
+galois_field_element galois_field_element::operator+(galois_field_element& in){
+    galois_field_element out;
+    out.element = element^in.element;
+    return out;
+}
+
+void galois_field_element::operator+=(galois_field_element& in){
+    element^=in.element;
 }
