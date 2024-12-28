@@ -33,3 +33,17 @@ galois_field_element galois_field_element::operator+(galois_field_element& in){
 void galois_field_element::operator+=(galois_field_element& in){
     element^=in.element;
 }
+
+galois_field_element::galois_field_element(){}
+
+galois_field_element::galois_field_element(const galois_field_element& obj){
+    element = obj.element;
+}
+
+galois_field_element& galois_field_element::operator=(const galois_field_element& obj){
+    if(this == &obj){
+        return *this;
+    }
+    element = obj.element;
+    return *this;
+}
