@@ -217,3 +217,51 @@ galois_field_element galois_field_norm::field_mult(galois_field_element in1, gal
 
     return out;
 }
+
+galois_field_element galois_field_norm::field_square(galois_field_element& in){
+    galois_field_element out(in);
+    out.cycl_shift_1_to_low();
+    return out;
+}
+
+galois_field_element galois_field_norm::field_power(galois_field_element& in, string power){
+    bitset<173> pow;
+    galois_field_element out;
+    size_t len = power.length();
+    if(len > pow.size()){
+        throw invalid_argument("Power is too long");
+    }
+    else{
+        for(int i = 0; i < len; i++){
+            pow[i] = power[len-1-i]-'0';
+        }
+    }
+
+    out.element.set();
+    int i = order-1;
+    while(pow[i] == 0){
+        i--;
+    }
+    while(i>=0){
+        if(pow[i] == 1){
+            out = field_mult(out, in);
+        }
+        if(i!=0){
+            out = field_square(out);
+        }
+        i--;
+    }
+    return out;
+}
+
+// galois_field_element galois_field_norm::invert(galois_field_element& in){
+
+// }
+
+bool galois_field_norm::trace(galois_field_element& in){
+    bool out = false;
+    for(int i = 0; i < order; i++){
+        out^=in.element[i];
+    }
+    return out;
+}

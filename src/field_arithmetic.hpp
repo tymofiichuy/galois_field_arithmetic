@@ -44,17 +44,20 @@ public:
 };
 
 class galois_field_norm{
-// private:
-public:
+private:
     int order = 173;
     bool** mult_matrix = nullptr;
-// public:
+public:
     void set_matrix();
 
     galois_field_element get_0();
     galois_field_element get_1();
 
     galois_field_element field_mult(galois_field_element in1, galois_field_element in2);
+    galois_field_element field_square(galois_field_element& in);
+    galois_field_element field_power(galois_field_element& in, std::string power);
+    galois_field_element invert(galois_field_element& in);
+    bool trace(galois_field_element& in);
 
     galois_field_norm();
     ~galois_field_norm();
