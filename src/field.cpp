@@ -119,3 +119,14 @@ bool galois_field::trace(galois_field_element& in){
     }
     return out.element[0];
 }
+
+galois_field_element galois_field::get_0(){
+    galois_field_element out;
+    return out;
+}
+
+galois_field_element galois_field::get_1(){
+    galois_field_element out;
+    out.element.set(0, true);
+    return out;
+}
