@@ -1,19 +1,20 @@
 #include<iostream>
 #include "field_arithmetic.hpp"
+#include "long_arithmetic.hpp"
 
 using namespace std;
 
-galois_field::galois_field(){
+galois_field_poly::galois_field_poly(){
     powers = new galois_field_element[345];
 }
 
-galois_field::~galois_field(){
+galois_field_poly::~galois_field_poly(){
     if(powers){
         delete[] powers;
     }
 }
 
-void galois_field::set_powers(){
+void galois_field_poly::set_powers(){
     int i = 0;    
     galois_field_element el;
     el.element.set(0, true);
@@ -35,7 +36,7 @@ void galois_field::set_powers(){
     }
 }
 
-galois_field_element galois_field::field_mult(galois_field_element& in1, galois_field_element& in2){
+galois_field_element galois_field_poly::field_mult(galois_field_element& in1, galois_field_element& in2){
     galois_field_element out;
     for(int i = 0; i < order; i++){
         if(in1.element[i]){
@@ -49,7 +50,7 @@ galois_field_element galois_field::field_mult(galois_field_element& in1, galois_
     return out;
 }
 
-galois_field_element galois_field::field_square(galois_field_element& in){
+galois_field_element galois_field_poly::field_square(galois_field_element& in){
     galois_field_element out;
     for(int i = 0; i < order; i++){
         if(in.element[i]){
@@ -59,7 +60,7 @@ galois_field_element galois_field::field_square(galois_field_element& in){
     return out;
 }
 
-galois_field_element galois_field::field_power(galois_field_element& in, string power){
+galois_field_element galois_field_poly::field_power(galois_field_element& in, string power){
     bitset<173> pow;
     galois_field_element out;
     size_t len = power.length();
@@ -89,7 +90,7 @@ galois_field_element galois_field::field_power(galois_field_element& in, string 
     return out;
 }
 
-galois_field_element galois_field::invert(galois_field_element& in){
+galois_field_element galois_field_poly::invert(galois_field_element& in){
     bitset<173> power;
     power.set();
     power.set(0, false);
@@ -110,7 +111,7 @@ galois_field_element galois_field::invert(galois_field_element& in){
     return out;
 }
 
-bool galois_field::trace(galois_field_element& in){
+bool galois_field_poly::trace(galois_field_element& in){
     galois_field_element out, temp;
     temp = in;
     for(int i = 0; i < order; i++){
@@ -120,13 +121,99 @@ bool galois_field::trace(galois_field_element& in){
     return out.element[0];
 }
 
-galois_field_element galois_field::get_0(){
+galois_field_element galois_field_poly::get_0(){
     galois_field_element out;
     return out;
 }
 
-galois_field_element galois_field::get_1(){
+galois_field_element galois_field_poly::get_1(){
     galois_field_element out;
     out.element.set(0, true);
+    return out;
+}
+
+galois_field_norm::galois_field_norm(){
+    mult_matrix = new bool*[order];
+    for(int i = 0; i < order; i++){
+        mult_matrix[i] = new bool[order]();
+    }
+}
+
+galois_field_norm::~galois_field_norm(){
+    if(mult_matrix){
+        for(int i = 0; i < order; i++){
+            delete[] mult_matrix[i];
+        }
+        delete[] mult_matrix;
+        mult_matrix = nullptr;
+    }
+}
+
+void galois_field_norm::set_matrix(){
+    long_int reduc(0, 3), pow(0, 3), modulo(347, 3), temp(0, 3), exp1(346, 3), exp2(1, 3);
+    for(int i = 0; i < order; i++){
+        for(int j = i; j < order; j++){
+            pow.reset();
+            if(i != j){
+                pow.set_bit(1, i);
+                pow.set_bit(1, j);                
+            }
+            else{
+                pow.set_bit(1, i+1);
+            }
+            long_arithmetic::long_divide(pow, modulo, reduc, pow);
+            if(reduc == exp1 || reduc == exp2){
+                mult_matrix[i][j] = true;
+                mult_matrix[j][i] = true;
+            }
+            else{
+                pow.reset();
+                pow.set_bit(1, j);
+                temp.set_bit(1, i);
+                long_arithmetic::long_sub(pow, temp, pow);
+                temp.set_bit(0, i);
+                long_arithmetic::long_divide(pow, modulo, reduc, pow);
+                if(reduc == exp1 || reduc == exp2){
+                    mult_matrix[i][j] = true;
+                    mult_matrix[j][i] = true;
+                }
+                else{
+                    mult_matrix[i][j] = false;
+                    mult_matrix[j][i] = false;
+                }
+            }
+        }
+    }
+}
+
+galois_field_element galois_field_norm::field_mult(galois_field_element in1, galois_field_element in2){
+    galois_field_element out, temp;
+    bool c_temp;
+
+    for(int i = 0; i < order; i++){
+        if(i!=0){
+            in1.cycl_shift_1_to_high();
+            in2.cycl_shift_1_to_high();
+        }
+
+        for(int j = 0; j < order; j++){
+            c_temp = false;
+            for(int k = 0; k < order; k++){
+                if(mult_matrix[order-j-1][order-k-1]){
+                    c_temp^=in1.element[k];
+                }
+            }
+            temp.element[j] = c_temp;
+        }
+
+        c_temp = false;
+        for(int j = 0; j < order; j++){
+            if(temp.element[j]){
+                c_temp^=in2.element[j];
+            }
+        }
+        out.element[order-i-1] = c_temp;
+    }
+
     return out;
 }

@@ -13,13 +13,17 @@ public:
     galois_field_element operator+ (galois_field_element& in);
     void operator+= (galois_field_element& in);
     galois_field_element& operator=(const galois_field_element& obj);
+    void cycl_shift_1_to_low();
+    void cycl_shift_1_to_high();
 
     galois_field_element();
     galois_field_element(const galois_field_element& obj);
-    friend class galois_field;
+
+    friend class galois_field_poly;
+    friend class galois_field_norm;
 };
 
-class galois_field{
+class galois_field_poly{
 private:
     int order = 173;
     galois_field_element* powers;
@@ -35,6 +39,23 @@ public:
     galois_field_element invert(galois_field_element& in);
     bool trace(galois_field_element& in);
 
-    galois_field();
-    ~galois_field();
+    galois_field_poly();
+    ~galois_field_poly();
+};
+
+class galois_field_norm{
+// private:
+public:
+    int order = 173;
+    bool** mult_matrix = nullptr;
+// public:
+    void set_matrix();
+
+    galois_field_element get_0();
+    galois_field_element get_1();
+
+    galois_field_element field_mult(galois_field_element in1, galois_field_element in2);
+
+    galois_field_norm();
+    ~galois_field_norm();
 };

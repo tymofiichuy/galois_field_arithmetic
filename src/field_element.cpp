@@ -47,3 +47,15 @@ galois_field_element& galois_field_element::operator=(const galois_field_element
     element = obj.element;
     return *this;
 }
+
+void galois_field_element::cycl_shift_1_to_low(){
+    bool temp = element[0];
+    element>>=1;
+    element[172] = temp;
+}
+
+void galois_field_element::cycl_shift_1_to_high(){
+    bool temp = element[172];
+    element<<=1;
+    element[0] = temp;
+}

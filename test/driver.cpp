@@ -1,36 +1,49 @@
 #include<iostream>
-#include"field_arithmetic.hpp"
+#include "field_arithmetic.hpp"
 
 using namespace std;
 
 int main(){
-    galois_field F;
-    F.set_powers();
+    // galois_field_poly F;
+    // F.set_powers();
     galois_field_element el1, el2, out;
     el1.read_element("10111111111011011001101010010011010010110010110110100011011000011101110101110110100000110001011010111111101000001000101110101101001001010110001101111001000000001010111011011");
     el2.read_element("11111010011001000111100100111110101001010001101000100100101010011011110011000111111111100111011111110110111100101010100110001010001110011100111101111111010000101010101011110");
-    string power = "01110110001010001110011111011110111110111011110000011001001110110000111011011110110111000010100011011001110011110111100010000000111001100001111111111010001011011001100010001";
+    // string power = "01110110001010001110011111011110111110111011110000011001001110110000111011011110110111000010100011011001110011110111100010000000111001100001111111111010001011011001100010001";
     
-    cout << "A: ";
-    el1.print_element();
-    cout << "B: ";
-    el2.print_element();
-    cout << "N: " << power << "\n\n";
-    out = el1 + el2;
-    cout << "A+B: ";
-    out.print_element();
+    // cout << "A: ";
+    // el1.print_element();
+    // cout << "B: ";
+    // el2.print_element();
+    // cout << "N: " << power << "\n\n";
+    // out = el1 + el2;
+    // cout << "A+B: ";
+    // out.print_element();
+    // out = F.field_mult(el1, el2);
+    // cout << "A*B: ";
+    // out.print_element();
+    // out = F.field_square(el1);
+    // cout << "A^2: ";
+    // out.print_element();
+    // out = F.invert(el1);
+    // cout << "1/A: ";
+    // out.print_element();
+    // out = F.field_power(el1, power);
+    // cout << "A^N: ";
+    // out.print_element();
+
+    galois_field_norm F;
+    F.set_matrix();
     out = F.field_mult(el1, el2);
-    cout << "A*B: ";
     out.print_element();
-    out = F.field_square(el1);
-    cout << "A^2: ";
-    out.print_element();
-    out = F.invert(el1);
-    cout << "1/A: ";
-    out.print_element();
-    out = F.field_power(el1, power);
-    cout << "A^N: ";
-    out.print_element();
+    cout << "01000000110110001010010100101111000100011000110110111000011101111011111100110110110100101001110001011010110011111001101100000100000100000001000010110101001101000110100101110";
+
+    // for(int i = 0; i < F.order; i ++){
+    //     for(int j = 0; j < F.order; j++){
+    //         cout << F.mult_matrix[i][j];
+    //     }
+    //     cout << "\n";
+    // }
 
     return 0;
 }
