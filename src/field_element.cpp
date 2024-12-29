@@ -59,3 +59,16 @@ void galois_field_element::cycl_shift_1_to_high(){
     element<<=1;
     element[0] = temp;
 }
+
+galois_field_element galois_field_element::cycl_shift_to_low(int shift){
+    galois_field_element out;
+    out.element.reset();
+    out.element = (element>>shift)|(element<<(173-shift));
+    return out;
+}
+
+galois_field_element galois_field_element::cycl_shift_to_high(int shift){
+    galois_field_element out;
+    out.element = (element<<shift)|(element>>(173-shift));
+    return out;
+}

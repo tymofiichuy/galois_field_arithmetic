@@ -255,13 +255,63 @@ galois_field_element galois_field_norm::field_power(galois_field_element& in, st
 }
 
 // galois_field_element galois_field_norm::invert(galois_field_element& in){
-
+//     galois_field_element temp, inverted(in);
+//     int power = order - 1, index = 1, iter = 0;
+//     while((power>>iter)!=0){
+//         iter++;
+//     }
+//     iter--;
+//     while(iter>=0){
+//         temp = inverted.cycl_shift_to_low(index);
+//         inverted = field_mult(inverted, temp);
+//         index<<=1;
+//         if((power&(1<<iter))!=0){
+//             inverted.cycl_shift_1_to_low();
+//             inverted = field_mult(inverted, in);
+//             index++;
+//         }
+//         iter--;
+//     }
+//     inverted.cycl_shift_1_to_low();
+//     return inverted;
 // }
+
+galois_field_element galois_field_norm::invert(galois_field_element& in){
+    bitset<173> power;
+    power.set();
+    power.set(0, false);
+
+    galois_field_element out;
+    
+    out.element.set();
+    int i = order-1;
+    while(i>=0){
+        if(power[i] == 1){
+            out = field_mult(out, in);
+        }
+        if(i!=0){
+            out = field_square(out);
+        }
+        i--;
+    }
+    return out;
+}
 
 bool galois_field_norm::trace(galois_field_element& in){
     bool out = false;
     for(int i = 0; i < order; i++){
         out^=in.element[i];
     }
+    return out;
+}
+
+galois_field_element galois_field_norm::get_0(){
+    galois_field_element out;
+    return out;
+}
+
+galois_field_element galois_field_norm::get_1(){
+    galois_field_element out;
+    out.element.set();
     return out;
 }

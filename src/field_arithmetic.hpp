@@ -15,6 +15,8 @@ public:
     galois_field_element& operator=(const galois_field_element& obj);
     void cycl_shift_1_to_low();
     void cycl_shift_1_to_high();
+    galois_field_element cycl_shift_to_low(int shift);
+    galois_field_element cycl_shift_to_high(int shift);
 
     galois_field_element();
     galois_field_element(const galois_field_element& obj);
