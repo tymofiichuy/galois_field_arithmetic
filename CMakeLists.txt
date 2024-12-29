@@ -23,3 +23,7 @@ include_directories(${LONG_ARITHMETIC_DIR})
 
 add_executable(driver ${TEST_DIR}/driver.cpp 
 ${SOURCES} ${LONG_ARITHMETIC})
+add_executable(benchmark ${TEST_DIR}/benchmark.cpp 
+${SOURCES} ${LONG_ARITHMETIC})
+add_executable(corr_test ${TEST_DIR}/corr_test.cpp 
+${SOURCES} ${LONG_ARITHMETIC})
